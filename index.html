@@ -2,7 +2,7 @@
 (()=>{
 const status=document.getElementById('status'),button=document.getElementById('open');
 document.getElementById('unlock').onsubmit=async e=>{e.preventDefault();button.disabled=true;try{
- status.textContent='ツールを読み込んでいます…';const r=await fetch('./payload.bin');if(!r.ok)throw Error('load');const all=new Uint8Array(await r.arrayBuffer());
+ status.textContent='ツールを読み込んでいます…';const r=await fetch('./payload.bin?release=20261001-silver',{cache:'no-store'});if(!r.ok)throw Error('load');const all=new Uint8Array(await r.arrayBuffer());
  const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(document.getElementById('password').value),'PBKDF2',false,['deriveKey']);
  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:all.slice(0,16),iterations:310000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['decrypt']);
  let plain;try{plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:all.slice(16,28)},key,all.slice(28))}catch{throw Error('password')}
